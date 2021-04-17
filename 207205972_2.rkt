@@ -62,4 +62,6 @@ By: Yarden Cohen 207205972
      => { str-app   <NUM> { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
      => { str-app   <NUMs> { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
      => { str-app   "333" { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
+     
+     חסרה לי עוד דוגמת גזירה
 |# 
