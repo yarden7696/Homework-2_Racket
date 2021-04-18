@@ -14,7 +14,7 @@ By: Yarden Cohen 207205972
  | { str-insrt <SE>  }
  | { num2str   <SE>  }
  
-<NUM> ::=  <NUMd> | <NUMc> | <NUMs> | <SE><NUMs> | <SE><NUMc> | <SE><NUMd> | <NUM><SE> | <SE><NUM>
+<NUM> ::=  <NUMd> | <NUMc> | <NUMs> | <SE><NUMs> | <SE><NUMc> | <SE><NUMd> | <NUM><SE> | <SE><NUM> | <SE>
 
 <DIGITd> ::= 0|1|2|3|4|5|6|7|8|9
 <NUMd> ::= <DIGITd> | <NUM><DIGITd>
@@ -70,6 +70,8 @@ By: Yarden Cohen 207205972
      => { str-app   <NUM> { str-insrt <NUMs> #\4 66  } }
      => { str-app   <NUM> { str-insrt "<NUMd>" #\4 66  } }
      => { str-app   <NUM> { str-insrt "1357" #\4 66  } }
-     => { str-app   <NUM> { str-insrt "1357" #\4 66  } }
-
+     => { str-app   <SE> { str-insrt "1357" #\4 66  } }
+     => { str-app   { num2str   <SE>  } { str-insrt "1357" #\4 66  } }
+     => { str-app   { num2str   <NUMd>  } { str-insrt "1357" #\4 66  } }
+     => { str-app   { num2str   156879  } { str-insrt "1357" #\4 66  } }
 |# 
