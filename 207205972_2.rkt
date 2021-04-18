@@ -14,7 +14,6 @@ By: Yarden Cohen 207205972
  | { str-insrt <SE>  }
  | { num2str   <SE>  }
  
-
 <NUM> ::=  <NUMd> | <NUMc> | <NUMs> | <SE><NUMs> | <SE><NUMc> | <SE><NUMd> | <NUM><SE> | <SE><NUM>
 
 <DIGITd> ::= 0|1|2|3|4|5|6|7|8|9
@@ -24,7 +23,6 @@ By: Yarden Cohen 207205972
 <NUMc> ::= <DIGITc> | <NUMc><DIGITc>
 
 <NUMs> ::= (string <NUMc>) | "<NUMd>"
-
 
   Q1.2
 
@@ -42,11 +40,8 @@ By: Yarden Cohen 207205972
      => { str-app    "<NUMd>" { num2str   7  }( string #\1 #\2 #\4 ) }
      => { str-app    "45" { num2str   7  }( string #\1 #\2 #\4 ) }
 
-
-
 ( string-append "333" ( string-insert "1357" #\4 66 )  ( string #\5 #\7 #\9 )) 
 <SE> => { str-app   <SE>  }
-     => { str-app   <NUM> }
      => { str-app   <NUM> }
      => { str-app   <SE><NUMs> }
      => { str-app   <SE>(string <NUMc>) }
@@ -63,5 +58,18 @@ By: Yarden Cohen 207205972
      => { str-app   <NUMs> { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
      => { str-app   "333" { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
      
-     חסרה לי עוד דוגמת גזירה
+( string-append ( number->string 156879) ( string-insert "1357" #\4 66 ) )
+<SE> => { str-app   <SE>  }
+     => { str-app   <NUM> }
+     => { str-app   <NUM><SE> }
+     => { str-app   <NUM> { str-insrt <SE>  } }
+     => { str-app   <NUM> { str-insrt <SE><NUMd>  } }     
+     => { str-app   <NUM> { str-insrt <SE> 66  } }
+     => { str-app   <NUM> { str-insrt <SE><NUMc> 66  } }
+     => { str-app   <NUM> { str-insrt <SE> #\4 66  } }
+     => { str-app   <NUM> { str-insrt <NUMs> #\4 66  } }
+     => { str-app   <NUM> { str-insrt "<NUMd>" #\4 66  } }
+     => { str-app   <NUM> { str-insrt "1357" #\4 66  } }
+     => { str-app   <NUM> { str-insrt "1357" #\4 66  } }
+
 |# 
