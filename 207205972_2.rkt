@@ -114,7 +114,10 @@ The difficulty was mainly the understanding how map and foldl work and how to co
 
 
 #|
-----------------------------check the tests that eran send !!!----------------------------------------
+-check the tests that eran send------------
+- if need adding test to poly and polyX---------
+-adding end cases tests to createPolynomial---------
+
 ערן:
 שלום לכולם,
 
@@ -137,6 +140,15 @@ The difficulty was mainly the understanding how map and foldl work and how to co
 => '(0 4 4))
 |#
 
+
+#| Q3.a
+input: list of numbers
+output: the output is function, the returned function takes a number x and return the value of
+the polynomial.
+This function called polyX function that called poly function that boths of them in createPolynomial
+function.
+This question took me an average of about two hours.
+The difficulty was to understand the output of the function and to understand the question itself. |#
 (: createPolynomial : (Listof Number) -> (Number -> Number))
 (define (createPolynomial coeffs)
   
@@ -148,9 +160,23 @@ The difficulty was mainly the understanding how map and foldl work and how to co
   
  (: polyX : Number -> Number)
  (define (polyX x)
-   (poly coeffs x 0 0))
+   (poly coeffs x 0 0)) ;; polyX call poly function with the number x it got
   polyX ;; this the body of createPolynomial function. in the body i called polyX function that called poly function
   )
 
 
+(define p2468 (createPolynomial '(2 4 6 8)))
+(test (p2468 0) =>(+ (* 2 (expt 0 0)) (* 4 (expt 0 1)) (* 6 (expt 0 2)) (* 8(expt 0 3))))
+(test (p2468 9) => (+ (* 2 (expt 9 0)) (* 4 (expt 9 1)) (* 6 (expt 9 2)) (* 8(expt 9 3))))
+(test (p2468 21) => (+ (* 2 (expt 21 0)) (* 4 (expt 21 1)) (* 6(expt 21 2)) (* 8 (expt 21 3))))
 
+(define p-576 (createPolynomial '(-5 7 6)))
+(test (p-576 31) => (+ (* -5 (expt 31 0)) (* 7 (expt 31 1)) (* 6(expt 31 2))))
+
+(define p_0 (createPolynomial '()))
+(test (p_0 4) => 0)
+
+
+
+
+ 
