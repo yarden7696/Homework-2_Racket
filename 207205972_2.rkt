@@ -110,6 +110,47 @@ The difficulty was mainly the understanding how map and foldl work and how to co
 (test (sum-of-squares '(2 2 2 2 2 2)) => 24)
 
 
+;;--------------------------------------------Q3--------------------------------------------------------
+
+
+#|
+----------------------------check the tests that eran send !!!----------------------------------------
+ערן:
+שלום לכולם,
+
+עקב שאלות שעלו, הוספתי דוגמאות לשאלה 3. 
+
+בפרט, הביטויים הבאים חוקיים:
+
+"{{poly {/ 4 2} {- 4 1}} {{- 8 4}}}"
+
+"{{poly {+ 0 1} 1 {* 0 9}} {{- 4 5} 3 {/ 27 9}}}"
+
+והטסטים הבאים צריכים להצליח.
+
+(test (run "{{poly {/ 4 2}  {- 4 1}} {{- 8 4}}}")
+
+=> '(14))
+
+(test (run "{{poly {+ 0 1} 1 {* 0 9}} {{- 4 5} 3 {/ 27 9}}}")
+
+=> '(0 4 4))
+|#
+
+(: createPolynomial : (Listof Number) -> (Number -> Number))
+(define (createPolynomial coeffs)
+  
+ (: poly : (Listof Number) Number Integer Number -> Number)
+ (define (poly argsL x power accum)
+ (if (null? argsL)
+     accum ;;if the list is empty-> return accum we got
+     (poly  (rest argsL) x (+ power 1) (+ accum (* (expt x power) (first argsL))))));;else- the list is not empty
+  
+ (: polyX : Number -> Number)
+ (define (polyX x)
+   (poly coeffs x 0 0))
+  polyX ;; this the body of createPolynomial function. in the body i called polyX function that called poly function
+  )
 
 
 
