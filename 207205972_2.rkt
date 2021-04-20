@@ -176,7 +176,7 @@ The difficulty was to understand the output of the function and to understand th
 (define p_0 (createPolynomial '()))
 (test (p_0 4) => 0)
 
-
+;; put minus to x
 
 
  
