@@ -117,26 +117,16 @@ The difficulty was mainly the understanding how map and foldl work and how to co
 -check the tests that eran send------------
 - if need adding test to poly and polyX---------
 -adding end cases tests to createPolynomial---------
-
 ערן:
 שלום לכולם,
-
 עקב שאלות שעלו, הוספתי דוגמאות לשאלה 3. 
-
 בפרט, הביטויים הבאים חוקיים:
-
 "{{poly {/ 4 2} {- 4 1}} {{- 8 4}}}"
-
 "{{poly {+ 0 1} 1 {* 0 9}} {{- 4 5} 3 {/ 27 9}}}"
-
 והטסטים הבאים צריכים להצליח.
-
 (test (run "{{poly {/ 4 2}  {- 4 1}} {{- 8 4}}}")
-
 => '(14))
-
 (test (run "{{poly {+ 0 1} 1 {* 0 9}} {{- 4 5} 3 {/ 27 9}}}")
-
 => '(0 4 4))
 |#
 
@@ -145,7 +135,8 @@ The difficulty was mainly the understanding how map and foldl work and how to co
 input: list of numbers
 output: the output is function, the returned function takes a number x and return the value of
 the polynomial.
-This function called polyX function that called poly function that boths of them in createPolynomial
+This function called polyX function (with the number x it got, power initialed 0 and initialed acuum 0)
+and polyX called poly function that boths of them in createPolynomial
 function.
 This question took me an average of about two hours.
 The difficulty was to understand the output of the function and to understand the question itself. |#
@@ -169,6 +160,7 @@ The difficulty was to understand the output of the function and to understand th
 (test (p2468 0) =>(+ (* 2 (expt 0 0)) (* 4 (expt 0 1)) (* 6 (expt 0 2)) (* 8(expt 0 3))))
 (test (p2468 9) => (+ (* 2 (expt 9 0)) (* 4 (expt 9 1)) (* 6 (expt 9 2)) (* 8(expt 9 3))))
 (test (p2468 21) => (+ (* 2 (expt 21 0)) (* 4 (expt 21 1)) (* 6(expt 21 2)) (* 8 (expt 21 3))))
+(test (p2468 -21) => (+ (* 2 (expt -21 0)) (* 4 (expt -21 1)) (* 6(expt -21 2)) (* 8 (expt -21 3))))
 
 (define p-576 (createPolynomial '(-5 7 6)))
 (test (p-576 31) => (+ (* -5 (expt 31 0)) (* 7 (expt 31 1)) (* 6(expt 31 2))))
@@ -176,7 +168,70 @@ The difficulty was to understand the output of the function and to understand th
 (define p_0 (createPolynomial '()))
 (test (p_0 4) => 0)
 
-;; put minus to x
+
+#| Q3.b.i
+This question took me an average of about 10 minutes and i barely faced any difficulties.
+Eventually AE is a number so that it can be chained to AEs and
+thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷𝟐 … 𝑷𝓵}}
+
+ BNF for the PLANG language:
+ The grammar:
+ <PLANG> :: = {{poly <AEs> }{<AEs> }}
+ <AEs> :: = <AE> | <AE> <AEs>
+ <AE> ::= <num>  As we learned in class 
+       | { + <AE> <AE> } 
+       | { - <AE> <AE> } 
+       | { * <AE> <AE> } 
+       | { / <AE> <AE> }
+|#
 
 
- 
+#| Q3.b.ii
+|#
+
+(define-type PLANG [Poly (Listof AE) (Listof AE)])
+ (define-type AE
+ [Num Number]
+ [Add AE AE]
+ [Sub AE AE]
+ [Mul AE AE]
+ [Div AE AE])
+
+ (: parse-sexpr : Sexpr -> AE)
+ ;; to convert s-expressions into AEs
+ (define (parse-sexpr sexpr)
+ (match sexpr
+ [(number: n) (Num n)]
+ [(list '+ lhs rhs) (Add (parse-sexpr lhs) (parse-sexpr rhs))]
+ [(list '- lhs rhs) (Sub (parse-sexpr lhs) (parse-sexpr rhs))]
+ [(list '* lhs rhs) (Mul (parse-sexpr lhs) (parse-sexpr rhs))]
+ [(list '/ lhs rhs) (Div (parse-sexpr lhs) (parse-sexpr rhs))]
+ [else (error 'parse-sexpr "bad syntax in ~s" sexpr)]))
+
+ (: parse : String -> PLANG)
+ ;; parses a string containing a PLANG expression to a PLANG AST
+ (define (parse str)
+ (let ([code (string->sexpr str)])
+ (parse-sexpr-to-PLANG code)))
+
+
+(: parse-sexpr-to-PLANG : Sexpr -> PLANG)
+(define (parse-sexpr-to-PLANG code)
+  (match code
+     [(list (cons 'poly Cs) '()) (error 'parse "at least one point is required in ~s" code)]
+     [(list (cons 'poly '()) (list Ps ...)) (error 'parse "at least one coefficient is required in ~s" code)]
+     [(list (cons 'poly Cs) (list Ps ...)) (Poly (map parse-sexpr Cs) (map parse-sexpr Ps))]
+     [else (error 'parse "bad syntax in ~s" code)]))
+    
+   
+;; tests
+(test (parse "{{poly 1 2 3} {4 6 9}}") => (Poly (list (Num 1) (Num 2) (Num 3)) (list (Num 4) (Num 6) (Num 9))))
+(test (parse "{{poly -1 2 3} {4 6 -9}}") => (Poly (list (Num -1) (Num 2) (Num 3)) (list (Num 4) (Num 6) (Num -9))))
+(test (parse "{{poly } {1 2} }") =error> "parse: at least one coefficient is required in ((poly) (1 2))")
+(test (parse "{{poly 1 2} {} }") =error> "parse: at least one point is required in ((poly 1 2) ())")
+(test (parse "{{poly 2 3} {4}}") => (Poly (list (Num 2) (Num 3)) (list (Num 4)))) 
+(test (parse "{{poly 4/5} {1/2 2/3 3}}") => (Poly (list (Num 4/5)) (list (Num 1/2) (Num 2/3) (Num 3))))
+(test (parse "{{poly 4/5 } {1/2 2/3 3} {poly 1 2 4} {1 2}}") =error> "parse: bad syntax in ((poly 4/5) (1/2 2/3 3) (poly 1 2 4) (1 2))")
+
+
+
