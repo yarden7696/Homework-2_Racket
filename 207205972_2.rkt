@@ -187,9 +187,14 @@ thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷�
 
 
 #| Q3.b.ii
-|#
+This question took me an average of about 2 hours.
+The difficulty was how to enable the 'parse-sexpr' function on the 2 lists.
+Finally I remembered that in question 2 i used 'map' and i think using it in this question can also help. |#
 
+#|PLANG constructed from the reserved word 'poly' and two lists of AE
+The first list is list of coefficients and the second is a list of numbers that we will place in X |#
 (define-type PLANG [Poly (Listof AE) (Listof AE)])
+
  (define-type AE
  [Num Number]
  [Add AE AE]
@@ -197,6 +202,12 @@ thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷�
  [Mul AE AE]
  [Div AE AE])
 
+#|
+input: Expression Sexpr
+output: Expression AE
+There is a check whether sexpr is of the type of +/ -/ */ :/ error
+And according to this there is a call to the appropriate constructor
+|#
  (: parse-sexpr : Sexpr -> AE)
  ;; to convert s-expressions into AEs
  (define (parse-sexpr sexpr)
@@ -208,6 +219,14 @@ thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷�
  [(list '/ lhs rhs) (Div (parse-sexpr lhs) (parse-sexpr rhs))]
  [else (error 'parse-sexpr "bad syntax in ~s" sexpr)]))
 
+
+#|
+input: String
+output: PLANG
+I created a function called 'parse-sexpr-to-PLANG' that receives sexpr and returns PLANG.
+We declared a variable named 'code' and sent him to 'string-> sexpr' function.
+The expression we received was sent to the function 'parse-sexpr-to-PLANG'.
+It is necessary to return PLANG caz the 'parse' function returns PLANG. |#
  (: parse : String -> PLANG)
  ;; parses a string containing a PLANG expression to a PLANG AST
  (define (parse str)
@@ -215,6 +234,17 @@ thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷�
  (parse-sexpr-to-PLANG code)))
 
 
+#|
+input: Expression Sexpr
+output: PLANG
+There is a check whether sexpr is of the type of:
+* {{'poly C1 C2...} {'()}} => Error caz the second list can not be null
+* {{'poly '()} {P1 P2...}} => Error caz first list can not be null
+* {{'poly C1 C2)} {P1 P2...}} => good syntax. i called 'poly' function with the left list and
+    the right list. these 2 lists should be in type AE and so that i called 'parse-sexpr' function that
+    return AE using map. 
+    map runs 'parse-sexpr' function on each of the lists elements.
+* else => we got bad syntax. |#
 (: parse-sexpr-to-PLANG : Sexpr -> PLANG)
 (define (parse-sexpr-to-PLANG code)
   (match code
