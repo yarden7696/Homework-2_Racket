@@ -265,3 +265,46 @@ There is a check whether sexpr is of the type of:
 
 
 
+#| Q3.b.iii
+This question took me an average of about 30 minutes.
+The difficulty was that i had to use the 'createPolynomial' function. |#
+
+;; evaluates AE expressions to numbers
+(: eval : AE ->  Number )
+ (define (eval expr)
+ (cases expr
+ [(Num n) n]
+ [(Add l r) (+ (eval l) (eval r))]
+ [(Sub l r) (- (eval l) (eval r))]
+ [(Mul l r) (* (eval l) (eval r))]
+ [(Div l r) (/ (eval l) (eval r))])) 
+
+
+#|
+input: PLANG. so that PLANG=(Poly (Listof AE) (Listof AE))
+output: Listof Number that each number on the list is a calculation of the coefficients and powers.
+I called 'createPolynomial' function. i used 'map' that runs '(createPolynomial (map eval Cs))' function
+on each of the (map eval Ps) elements.
+|#
+ (: eval-poly : PLANG -> (Listof Number))
+ (define (eval-poly p-expr)
+   (cases p-expr
+     [(Poly Cs Ps) (map (createPolynomial (map eval Cs)) (map eval Ps))]))
+  
+
+ (: run : String -> (Listof Number))
+ ;; evaluate a FLANG program contained in a string
+ (define (run str)
+ (eval-poly (parse str)))
+  
+;;tests
+(test (run "{{poly 1 2 3} {1 2 3}}")=> '(6 17 34))
+(test (run "{{poly 4 2 7} {1 4 2}}")=> '(13 124 36))
+(test (run "{{poly 1/2 } {1/2 2/3 3}}")=> '(1/2 1/2 1/2))
+(test (run "{{poly 2 3} {3}}") => '(11))
+(test (run "{{poly 1 1 0} {-1 -1}}")=> '(0 0))
+
+(test (eval(Add (Num 2) (Num 3)))=> 5) 
+(test (eval(Sub (Num 4) (Num 4)))=> 0)
+(test (eval(Mul (Num 2) (Num 3)))=> 6)
+(test (eval(Div (Num 2) (Num 1)))=> 2) 
