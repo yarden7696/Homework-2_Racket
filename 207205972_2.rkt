@@ -113,24 +113,6 @@ The difficulty was mainly the understanding how map and foldl work and how to co
 ;;--------------------------------------------Q3--------------------------------------------------------
 
 
-#|
--check the tests that eran send------------
-- if need adding test to poly and polyX---------
--adding end cases tests to createPolynomial---------
-ערן:
-שלום לכולם,
-עקב שאלות שעלו, הוספתי דוגמאות לשאלה 3. 
-בפרט, הביטויים הבאים חוקיים:
-"{{poly {/ 4 2} {- 4 1}} {{- 8 4}}}"
-"{{poly {+ 0 1} 1 {* 0 9}} {{- 4 5} 3 {/ 27 9}}}"
-והטסטים הבאים צריכים להצליח.
-(test (run "{{poly {/ 4 2}  {- 4 1}} {{- 8 4}}}")
-=> '(14))
-(test (run "{{poly {+ 0 1} 1 {* 0 9}} {{- 4 5} 3 {/ 27 9}}}")
-=> '(0 4 4))
-|#
-
-
 #| Q3.a
 input: list of numbers
 output: the output is function, the returned function takes a number x and return the value of
