@@ -14,7 +14,7 @@ By: Yarden Cohen 207205972
  
 <NUM> ::=  <NUMd> | <NUMc> | <NUMs> | <SE><NUMs> | <SE><NUMc> | <SE><NUMd> | <NUM><SE> | <SE><NUM> | <SE>
 <DIGITd> ::= 0|1|2|3|4|5|6|7|8|9
-<NUMd> ::= <DIGITd> | <NUM><DIGITd>
+<NUMd> ::= <DIGITd> | <NUMd><DIGITd>
 <DIGITc> ::= #\0| #\1| #\2| #\3| #\4| #\5| #\6| #\7| #\8| #\9
 <NUMc> ::= <DIGITc> | <NUMc><DIGITc>
 <NUMs> ::= (string <NUMc>) | "<NUMd>"
