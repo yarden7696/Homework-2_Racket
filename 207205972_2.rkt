@@ -5,69 +5,123 @@
 #|
 Exercise: Ex 2
 By: Yarden Cohen 207205972
- Q1.1
- BNF for the SE language:
- <SE> ::=  <NUM> 
- | { str-app   <SE>  }
- | { str-insrt <SE>  }
- | { num2str   <SE>  }
- 
-<NUM> ::=  <NUMd> | <NUMc> | <NUMs> | <SE><NUMs> | <SE><NUMc> | <SE><NUMd> | <NUM><SE> | <SE><NUM> | <SE>
-<DIGITd> ::= 0|1|2|3|4|5|6|7|8|9
-<NUMd> ::= <DIGITd> | <NUMd><DIGITd>
-<DIGITc> ::= #\0| #\1| #\2| #\3| #\4| #\5| #\6| #\7| #\8| #\9
-<NUMc> ::= <DIGITc> | <NUMc><DIGITc>
-<NUMs> ::= (string <NUMc>) | "<NUMd>"
-  Q1.2
-( string-append "45" ( number->string ( string-length "0033344" )) ( string #\1 #\2 #\4 ))
-<SE> => { str-app   <SE>  }
-     => { str-app   <NUM> }
-     => { str-app   <SE><NUMs> }
-     => { str-app    <SE>(string <NUMc>) }
-     => { str-app    <SE>( string #\1 #\2 #\4 ) }
-     => { str-app    <NUM><SE>( string #\1 #\2 #\4 ) }
-     => { str-app    <NUM> { num2str   <SE>  }( string #\1 #\2 #\4 ) }
-     => { str-app    <NUM> { num2str   ( string-length "0033344" )  }( string #\1 #\2 #\4 ) }
-     => { str-app    <NUM> { num2str   7  }( string #\1 #\2 #\4 ) }
-     => { str-app    <NUMs> { num2str   7  }( string #\1 #\2 #\4 ) }
-     => { str-app    "<NUMd>" { num2str   7  }( string #\1 #\2 #\4 ) }
-     => { str-app    "45" { num2str   7  }( string #\1 #\2 #\4 ) }
-( string-append "333" ( string-insert "1357" #\4 66 )  ( string #\5 #\7 #\9 )) 
-<SE> => { str-app   <SE>  }
-     => { str-app   <NUM> }
-     => { str-app   <SE><NUMs> }
-     => { str-app   <SE>(string <NUMc>) }
-     => { str-app   <SE>(string #\5 #\7 #\9 ) }
-     => { str-app   <SE>(string #\5 #\7 #\9 ) }
-     => { str-app   <NUM><SE>(string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt <SE>  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt <NUM>  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt <SE><NUMd>  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt <SE><NUMc> 66  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt <NUM> #\4 66  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt <NUMs> #\4 66  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUM> { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
-     => { str-app   <NUMs> { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
-     => { str-app   "333" { str-insrt "1357" #\4 66  } (string #\5 #\7 #\9 ) }
-     
-( string-append ( number->string 156879) ( string-insert "1357" #\4 66 ) )
-<SE> => { str-app   <SE>  }
-     => { str-app   <NUM> }
-     => { str-app   <NUM><SE> }
-     => { str-app   <NUM> { str-insrt <SE>  } }
-     => { str-app   <NUM> { str-insrt <SE><NUMd>  } }     
-     => { str-app   <NUM> { str-insrt <SE> 66  } }
-     => { str-app   <NUM> { str-insrt <SE><NUMc> 66  } }
-     => { str-app   <NUM> { str-insrt <SE> #\4 66  } }
-     => { str-app   <NUM> { str-insrt <NUMs> #\4 66  } }
-     => { str-app   <NUM> { str-insrt "<NUMd>" #\4 66  } }
-     => { str-app   <NUM> { str-insrt "1357" #\4 66  } }
-     => { str-app   <SE> { str-insrt "1357" #\4 66  } }
-     => { str-app   { num2str   <SE>  } { str-insrt "1357" #\4 66  } }
-     => { str-app   { num2str   <NUMd>  } { str-insrt "1357" #\4 66  } }
-     => { str-app   { num2str   156879  } { str-insrt "1357" #\4 66  } }
-|#
 
+Q1.1
+
+ BNF for the SE language:
+ <SE> ::=   <NUMd>  (1)
+         |  <NUMs>  (2)
+         |  <DIGITc>(3)
+
+
+<DIGITd> ::= 0 (4)
+           |1 (5)
+           |2 (6)
+           |3 (7)
+           |4 (8)
+           |5 (9)
+           |6 (10)
+           |7 (11)
+           |8 (12)
+           |9 (13)
+
+<NUMd> ::= <DIGITd> (14)
+          | <NUMd><DIGITd> (15) 
+          | ( string-length <NUMs> ) (16) 
+
+
+<DIGITc> ::= #\0(17)
+          | #\1 (18)
+          | #\2 (19)
+          | #\3 (20)
+          | #\4 (21)
+          | #\5 (22) 
+          | #\6 (23)
+          | #\7 (24)
+          | #\8 (25)
+          | #\9 (26)
+
+<NUMc> ::= <DIGITc> (27)
+        | <NUMc><DIGITc> (28)
+
+
+<NUMs> ::= "<NUMd>" (29)
+        | (string <NUMc>) (30)
+        | (number->string <NUMd>) (31)
+        | (string-insert <NUMs> <DIGITc> <NUMd>) (32)
+        | (string-append <strExp>) (33)
+
+<strExp> ::= <NUMs> (34)
+        | <NUMs><strExp> (35)
+
+
+ Q1.2
+
+(string-append "45" ( number->string ( string-length "0033344" )) ( string #\1 #\2 #\4 ))
+<SE> => <NUMs>  (2)
+     => (string-append <strExp>) (33)
+     => (string-append <NUMs> <strExp>) (35)
+     => (string-append "<NUMd>" <strExp>) (29)
+     => (string-append "<NUMd><DIGITd>" <strExp>) (15)
+     => (string-append "<NUMd>5" <strExp>)  (9)
+     => (string-append "<DIGITd>5" <strExp>) (14)
+     => (string-append "45" <NUMs><strExp>)  (35)
+     => (string-append "45" (number->string <NUMd>) <strExp>))  (31)
+     => (string-append "45" (number->string ( string-length <NUMs>) <strExp>)) (16)
+     => (string-append "45" (number->string ( string-length "<NUMd>") <strExp>)) (29)
+     => (string-append "45" (number->string ( string-length "<NUMd><DIGITd>") <strExp>)) (15)x 7 times
+     => (string-append "45" (number->string ( string-length "0033344") (string <NUMc>))) (30)
+     => (string-append "45" (number->string ( string-length "0033344") (string <NUMc><DIGITc>))) (28)
+     => (string-append "45" (number->string ( string-length "0033344") (string <NUMc> #\4))) (21)
+     => (string-append "45" (number->string ( string-length "0033344") (string <NUMc><DIGITc> #\4))) (28)
+     => (string-append "45" (number->string ( string-length "0033344") (string <NUMc> #\2 #\4))) (19)
+     => (string-append "45" (number->string ( string-length "0033344") (string <DIGITc> #\2 #\4))) (27)
+     => (string-append "45" (number->string ( string-length "0033344") (string #\1 #\2 #\4))) (18)
+
+
+
+
+( string-append "333" ( string-insert "1" #\4 6 )  ( string #\5 )) 
+<SE> => <NUMs>  (2)
+     => (string-append <strExp>) (33)
+     => (string-append <NUMs><strExp>) (35)
+     => (string-append "<NUMd>" <strExp>) (29)
+     => (string-append "<NUMd><DIGITd>" <strExp>) (15)x 2 times and (14)x1 time
+     => (string-append "333" <NUMs><strExp>) (35)
+     => (string-append "333" (string-insert <NUMs> <DIGITc> <NUMd>) <strExp>) (32)
+     => (string-append "333" (string-insert "<NUMd>" <DIGITc> <NUMd>) <strExp>) (29)
+     => (string-append "333" (string-insert "<DIGITd>" <DIGITc> <NUMd>) <strExp>) (14)
+     => (string-append "333" (string-insert "1" <DIGITc> <NUMd>) <strExp>) (5)
+     => (string-append "333" (string-insert "1" #\4 <NUMd>) <strExp>) (21)
+     => (string-append "333" (string-insert "1" #\4 <DIGITd>) <strExp>) (14)
+     => (string-append "333" (string-insert "1" #\4 6) <strExp>) (10)
+     => (string-append "333" (string-insert "1" #\4 6) <NUMs>) (34)
+     => (string-append "333" (string-insert "1" #\4 6) (string <NUMc>)) (30)
+     => (string-append "333" (string-insert "1" #\4 6) (string <DIGITc>)) (27)
+     => (string-append "333" (string-insert "1" #\4 6) (string #\5)) (22)
+
+
+(string-append ( number->string 15) ( string-insert "7" #\9 66 ))
+<SE> => <NUMs>  (2)
+     => (string-append <strExp>) (33)
+     => (string-append <NUMs><strExp>) (35)
+     => (string-append (number->string <NUMd>) <strExp>) (31)
+     => (string-append (number->string <NUMd><DIGITd>) <strExp>) (15)
+     => (string-append (number->string <NUMd>5) <strExp>) (9)
+     => (string-append (number->string <DIGITd>5) <strExp>) (14)
+     => (string-append (number->string 15) <strExp>) (5)
+     => (string-append (number->string 15) <NUMs>) (34)
+     => (string-append (number->string 15) (string-insert <NUMs> <DIGITc> <NUMd>)) (32)
+     => (string-append (number->string 15) (string-insert "<NUMd>" <DIGITc> <NUMd>)) (29)
+     => (string-append (number->string 15) (string-insert "<DIGITd>" <DIGITc> <NUMd>)) (14)
+     => (string-append (number->string 15) (string-insert "7" <DIGITc> <NUMd>)) (11)
+     => (string-append (number->string 15) (string-insert "7" #\9 <NUMd>)) (26)
+     => (string-append (number->string 15) (string-insert "7" #\9 <NUMd><DIGITd>)) (15)
+     => (string-append (number->string 15) (string-insert "7" #\9 <NUMd>6)) (10)
+     => (string-append (number->string 15) (string-insert "7" #\9 <DIGITd>6)) (14)
+     => (string-append (number->string 15) (string-insert "7" #\9 66)) (10)
+
+|#
 
 ;;--------------------------------------------Q2--------------------------------------------------------
 
