@@ -8,11 +8,22 @@ By: Yarden Cohen 207205972
 
 Q1.1
 
+<SE> Can return natural number, string or char.
+A string can appear in a variety of ways:
+"number", (string #\number...), (number->string(number)), (string-insert(...)) , etc...
+so in  <NUMs> you can find all these options.
+Note that 'string-append' is the only one that can get more than one string so I created <strExp>
+which is a chaining of strings.
+<NUMd> can get a single-digit number, number> 9 (a number greater than a single-digit number)
+and number that using the function ( string-length(number)).
+This question was not difficult for me and took me an average of 5 hours.
+The difficulty was to undrestand how and where i need to write and use 'number->string','string-insert',
+'string-append' caz i thought they were should appear in the definition of <SE>.  
+
  BNF for the SE language:
  <SE> ::=   <NUMd>  (1)
          |  <NUMs>  (2)
          |  <DIGITc>(3)
-
 
 <DIGITd> ::= 0 (4)
            |1 (5)
@@ -26,9 +37,8 @@ Q1.1
            |9 (13)
 
 <NUMd> ::= <DIGITd> (14)
-          | <NUMd><DIGITd> (15) 
-          | ( string-length <NUMs> ) (16) 
-
+          | <NUMd><DIGITd> (15)
+          | ( string-length <NUMs> ) (16)
 
 <DIGITc> ::= #\0(17)
           | #\1 (18)
@@ -44,7 +54,6 @@ Q1.1
 <NUMc> ::= <DIGITc> (27)
         | <NUMc><DIGITc> (28)
 
-
 <NUMs> ::= "<NUMd>" (29)
         | (string <NUMc>) (30)
         | (number->string <NUMd>) (31)
@@ -54,10 +63,10 @@ Q1.1
 <strExp> ::= <NUMs> (34)
         | <NUMs><strExp> (35)
 
-
  Q1.2
 
-(string-append "45" ( number->string ( string-length "0033344" )) ( string #\1 #\2 #\4 ))
+a. (string-append "45" ( number->string ( string-length "0033344" )) ( string #\1 #\2 #\4 ))
+
 <SE> => <NUMs>  (2)
      => (string-append <strExp>) (33)
      => (string-append <NUMs> <strExp>) (35)
@@ -78,10 +87,8 @@ Q1.1
      => (string-append "45" (number->string ( string-length "0033344") (string <DIGITc> #\2 #\4))) (27)
      => (string-append "45" (number->string ( string-length "0033344") (string #\1 #\2 #\4))) (18)
 
+b. ( string-append "333" ( string-insert "1" #\4 6 )  ( string #\5 ))
 
-
-
-( string-append "333" ( string-insert "1" #\4 6 )  ( string #\5 )) 
 <SE> => <NUMs>  (2)
      => (string-append <strExp>) (33)
      => (string-append <NUMs><strExp>) (35)
@@ -100,8 +107,8 @@ Q1.1
      => (string-append "333" (string-insert "1" #\4 6) (string <DIGITc>)) (27)
      => (string-append "333" (string-insert "1" #\4 6) (string #\5)) (22)
 
+c. (string-append ( number->string 15) ( string-insert "7" #\9 66 ))
 
-(string-append ( number->string 15) ( string-insert "7" #\9 66 ))
 <SE> => <NUMs>  (2)
      => (string-append <strExp>) (33)
      => (string-append <NUMs><strExp>) (35)
@@ -120,7 +127,6 @@ Q1.1
      => (string-append (number->string 15) (string-insert "7" #\9 <NUMd>6)) (10)
      => (string-append (number->string 15) (string-insert "7" #\9 <DIGITd>6)) (14)
      => (string-append (number->string 15) (string-insert "7" #\9 66)) (10)
-
 |#
 
 ;;--------------------------------------------Q2--------------------------------------------------------
@@ -209,7 +215,6 @@ The difficulty was to understand the output of the function and to understand th
 This question took me an average of about 10 minutes and i barely faced any difficulties.
 Eventually AE is a number so that it can be chained to AEs and
 thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷𝟐 … 𝑷𝓵}}
-
  BNF for the PLANG language:
  The grammar:
  <PLANG> :: = {{poly <AEs> }{<AEs> }}
