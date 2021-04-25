@@ -108,7 +108,6 @@ b. ( string-append "333" ( string-insert "1" #\4 6 )  ( string #\5 ))
      => (string-append "333" (string-insert "1" #\4 6) (string #\5)) (22)
 
 c. (string-append ( number->string 15) ( string-insert "7" #\9 66 ))
-
 <SE> => <NUMs>  (2)
      => (string-append <strExp>) (33)
      => (string-append <NUMs><strExp>) (35)
@@ -136,8 +135,8 @@ input: some number
 output: calc (num)^2
 This is an auxiliary function that calculates a number squared |#
 (: square : Number -> Number)
-(define(square num)
-   (* num num))  
+(define(square y)
+   (* y y))  
 
 #|
 input: list of numbers
@@ -215,15 +214,21 @@ The difficulty was to understand the output of the function and to understand th
 This question took me an average of about 10 minutes and i barely faced any difficulties.
 Eventually AE is a number so that it can be chained to AEs and
 thus get the {{ 𝒑𝒐𝒍𝒚 𝑪𝟏 𝑪𝟐 … 𝑪𝒌} {𝑷𝟏 𝑷𝟐 … 𝑷𝓵}}
+
  BNF for the PLANG language:
  The grammar:
+
  <PLANG> :: = {{poly <AEs> }{<AEs> }}
- <AEs> :: = <AE> | <AE> <AEs>
- <AE> ::= <num>  As we learned in class 
-       | { + <AE> <AE> } 
-       | { - <AE> <AE> } 
-       | { * <AE> <AE> } 
-       | { / <AE> <AE> }
+
+ <AEs> :: = <AE> (1)
+        | <AE> <AEs> (2)
+
+As we learned in class 
+ <AE> ::= <num> (3) 
+       | { + <AE> <AE> } (4) 
+       | { - <AE> <AE> } (5)
+       | { * <AE> <AE> } (6)
+       | { / <AE> <AE> } (7)
 |#
 
 
